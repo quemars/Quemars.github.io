@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Global Time App — Project Sketch</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Global Time App</h1>
+    <div class="header-controls">
+      <button id="theme-toggle" aria-label="Toggle theme">🌞/🌙</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <h2>Project description</h2>
+      <p>
+        This small app shows the current time for a selected city and updates every second.
+        Basic features: dropdown to select a city and live-updating time.
+        Enhanced features (later): multiple cities, dark/light theme, timezone event conversion.
+      </p>
+    </section>
+
+    <section class="sketch">
+      <h2>Sketch / Wireframe</h2>
+      <pre>
++----------------------------------------------+
+| Global Time App              [Dark / Light]  |
++----------------------------------------------+
+| Select a city: [ Dropdown v ]                |
+|                                              |
+|  -------------------------------             |
+| | CITY NAME                 04:12:03 PM |    |
+| | Timezone: America/Los_Angeles         |    |
+|  -------------------------------             |
+|                                              |
+| [Add City] [Remove] [Save Favorites]         |
++----------------------------------------------+
+      </pre>
+      <p class="note">(Simple mockup — replace with a hand sketch if required)</p>
+    </section>
+
+    <section class="files">
+      <h2>Files included in this repo (so far)</h2>
+      <ul>
+        <li><strong>index.html</strong> — project description & sketch (this file)</li>
+        <li><strong>styles.css</strong> — basic styling for layout</li>
+        <li><strong>README.md</strong> — project overview (already in repo)</li>
+      </ul>
+    </section>
+
+    <section class="next">
+      <h2>Next steps (when coding)</h2>
+      <ol>
+        <li>Implement dropdown and JS to show live local time for the selected city</li>
+        <li>Add ability to add/remove multiple cities</li>
+        <li>Implement dark/light theme toggle (persist preference)</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Author: Quemars — <a href="https://github.com/quemars/Quemars.github.io">Repo</a></p>
+  </footer>
+</body>
+</html>
