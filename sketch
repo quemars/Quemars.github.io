@@ -1,0 +1,15 @@
++---------------------------------------------------+
+| Global Time App                                   |
+| [Logo]                        [Dark / Light toggle]|
++---------------------------------------------------+
+| Select a city: [ Dropdown v ]                     |
+|                                                   |
+|  -------------------------------                  |
+| | CITY NAME                         04:12:03 PM | |
+| | Timezone: America/Los_Angeles                 | |
+|  -------------------------------                  |
+|                                                   |
+| [Add City]   [Remove Selected]   [Save Favorites] |
++---------------------------------------------------+
+| Footer: project author, github link, short notes  |
++---------------------------------------------------+
