@@ -1,69 +1,174 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Global Time App — Project Sketch</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>Global Time App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="site-header">
+  <header class="header">
     <h1>Global Time App</h1>
-    <div class="header-controls">
-      <button id="theme-toggle" aria-label="Toggle theme">🌞/🌙</button>
-    </div>
+    <p class="subtitle">
+      Select cities and see their local time update every second.
+    </p>
+
+    <button id="themeToggle" class="theme-toggle">Switch to Dark Mode</button>
   </header>
 
-  <main class="container">
-    <section class="intro">
-      <h2>Project description</h2>
-      <p>
-        This small app shows the current time for a selected city and updates every second.
-        Basic features: dropdown to select a city and live-updating time.
-        Enhanced features (later): multiple cities, dark/light theme, timezone event conversion.
-      </p>
+  <main class="main">
+    <section class="controls">
+      <label for="citySelect">Choose a city:</label>
+      <select id="citySelect">
+        <option value="America/Los_Angeles">Los Angeles (PST)</option>
+        <option value="America/New_York">New York (EST)</option>
+        <option value="Europe/London">London (GMT)</option>
+        <option value="Europe/Paris">Paris (CET)</option>
+        <option value="Asia/Tokyo">Tokyo (JST)</option>
+        <option value="Australia/Sydney">Sydney (AEDT)</option>
+      </select>
+      <button id="addCityBtn" class="btn">Add City</button>
     </section>
 
-    <section class="sketch">
-      <h2>Sketch / Wireframe</h2>
-      <pre>
-+----------------------------------------------+
-| Global Time App              [Dark / Light]  |
-+----------------------------------------------+
-| Select a city: [ Dropdown v ]                |
-|                                              |
-|  -------------------------------             |
-| | CITY NAME                 04:12:03 PM |    |
-| | Timezone: America/Los_Angeles         |    |
-|  -------------------------------             |
-|                                              |
-| [Add City] [Remove] [Save Favorites]         |
-+----------------------------------------------+
-      </pre>
-      <p class="note">(Simple mockup — replace with a hand sketch if required)</p>
+    <section class="single-city">
+      <h2>Current Selected City</h2>
+      <div id="singleCityCard" class="time-card">
+        <h3 class="city-name">Los Angeles (PST)</h3>
+        <p class="time-text" id="singleCityTime">--:--:--</p>
+      </div>
     </section>
 
-    <section class="files">
-      <h2>Files included in this repo (so far)</h2>
-      <ul>
-        <li><strong>index.html</strong> — project description & sketch (this file)</li>
-        <li><strong>styles.css</strong> — basic styling for layout</li>
-        <li><strong>README.md</strong> — project overview (already in repo)</li>
-      </ul>
-    </section>
-
-    <section class="next">
-      <h2>Next steps (when coding)</h2>
-      <ol>
-        <li>Implement dropdown and JS to show live local time for the selected city</li>
-        <li>Add ability to add/remove multiple cities</li>
-        <li>Implement dark/light theme toggle (persist preference)</li>
-      </ol>
+    <section class="multi-city">
+      <h2>Saved Cities</h2>
+      <p class="hint">Use "Add City" to track multiple locations. Click ✕ to remove.</p>
+      <div id="citiesContainer" class="cards-container">
+        <!-- city cards are injected here -->
+      </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <p>Author: Quemars — <a href="https://github.com/quemars/Quemars.github.io">Repo</a></p>
+  <footer class="footer">
+    <p>Global Time App · CS351 · Built by Quemars Azizi</p>
   </footer>
+
+  <script>
+    // Simple city list (same values as in the dropdown)
+    const cities = [
+      { label: "Los Angeles (PST)", tz: "America/Los_Angeles" },
+      { label: "New York (EST)", tz: "America/New_York" },
+      { label: "London (GMT)", tz: "Europe/London" },
+      { label: "Paris (CET)", tz: "Europe/Paris" },
+      { label: "Tokyo (JST)", tz: "Asia/Tokyo" },
+      { label: "Sydney (AEDT)", tz: "Australia/Sydney" }
+    ];
+
+    const citySelect = document.getElementById("citySelect");
+    const singleCityCard = document.getElementById("singleCityCard");
+    const singleCityTime = document.getElementById("singleCityTime");
+    const citiesContainer = document.getElementById("citiesContainer");
+    const addCityBtn = document.getElementById("addCityBtn");
+    const themeToggle = document.getElementById("themeToggle");
+
+    // keeps track of cities added in the multi-city section
+    let savedCities = [];
+
+    function getCityLabel(timeZone) {
+      const found = cities.find(c => c.tz === timeZone);
+      return found ? found.label : timeZone;
+    }
+
+    function formatTimeForZone(timeZone) {
+      try {
+        return new Date().toLocaleTimeString("en-US", {
+          timeZone,
+          hour12: false
+        });
+      } catch (e) {
+        // fallback in case timezone is weird
+        return new Date().toLocaleTimeString("en-US", { hour12: false });
+      }
+    }
+
+    // update the "Current Selected City" card
+    function updateSingleCity() {
+      const tz = citySelect.value;
+      const label = getCityLabel(tz);
+      singleCityCard.querySelector(".city-name").innerText = label;
+      singleCityTime.innerText = formatTimeForZone(tz);
+    }
+
+    // re-render all cards in the Saved Cities section
+    function renderSavedCities() {
+      citiesContainer.innerHTML = "";
+
+      savedCities.forEach((tz, index) => {
+        const card = document.createElement("div");
+        card.className = "time-card";
+
+        const title = document.createElement("h3");
+        title.className = "city-name";
+        title.innerText = getCityLabel(tz);
+
+        const timeP = document.createElement("p");
+        timeP.className = "time-text";
+        timeP.dataset.tz = tz; // store timezone on the element
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "remove-btn";
+        removeBtn.innerText = "✕";
+        removeBtn.addEventListener("click", () => {
+          savedCities.splice(index, 1);
+          renderSavedCities();
+        });
+
+        card.appendChild(removeBtn);
+        card.appendChild(title);
+        card.appendChild(timeP);
+        citiesContainer.appendChild(card);
+      });
+    }
+
+    // updates the times shown on all city cards
+    function tick() {
+      // single city
+      const tz = citySelect.value;
+      singleCityTime.innerText = formatTimeForZone(tz);
+
+      // multi cities
+      const timeElements = document.querySelectorAll(".time-text[data-tz]");
+      timeElements.forEach(el => {
+        const tz = el.dataset.tz;
+        el.innerText = formatTimeForZone(tz);
+      });
+    }
+
+    // add selected city to saved list (if not already there)
+    addCityBtn.addEventListener("click", () => {
+      const tz = citySelect.value;
+      if (!savedCities.includes(tz)) {
+        savedCities.push(tz);
+        renderSavedCities();
+      }
+    });
+
+    // change current city when dropdown changes
+    citySelect.addEventListener("change", () => {
+      updateSingleCity();
+    });
+
+    // simple dark / light theme toggle
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const darkModeOn = document.body.classList.contains("dark");
+      themeToggle.innerText = darkModeOn
+        ? "Switch to Light Mode"
+        : "Switch to Dark Mode";
+    });
+
+    // initial setup
+    updateSingleCity();
+    tick();
+    setInterval(tick, 1000);
+  </script>
 </body>
 </html>
