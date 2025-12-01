@@ -3,7 +3,7 @@
 A simple web app that shows the current local time for cities around the world.  
 Built as a CS351 project and hosted via GitHub Pages at:
 
-> https://quemars.github.io (after pushing `index.html` on the `main` branch)
+> https://quemars.github.io 
 > https://quemars.github.io
 
 ---
